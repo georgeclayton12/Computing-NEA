@@ -1,0 +1,22 @@
+VisualElement {
+}
+
+.menu-button {
+    font-size: 20px;
+    background-color: rgba(145, 76, 255, 255);
+    width: 250px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 255);
+    -unity-font-style: bold;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
