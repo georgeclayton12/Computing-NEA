@@ -143,6 +143,34 @@ bool isinmaprange(int x, int y)
 
         return regions; // Return the list of regions
     }
+    bool isinmaprange(int x, int y)
+{
+    return x >= 0 && x < width && y >= 0 && y < height; // Returns true if (x, y) is within the map range
+}
+
+
+class room
+{
+    public List<coord> tiles; // List of all tiles in the room
+    public List<coord> edgetiles; // List of tiles on the edge of the room (for pathfinding or connecting rooms)
+    public List<room> connectedrooms; // List of rooms connected to this room
+    public int roomsize; // Size of the room (number of tiles)
+
+    // Constructor that takes the room's tiles and the map
+    public room(List<coord> roomtiles, int[,] map) 
+    {
+        tiles = roomtiles; // Initialize the tiles of the room
+        roomsize = tiles.Count; // Set the size of the room
+        connectedrooms = new List<room>(); // Initialize the list of connected rooms
+
+        edgetiles = new List<coord>(); // Initialize the list of edge tiles
+        foreach (coord tile in roomtiles) 
+        {
+            // Logic to determine if a tile is an edge tile goes here
+        }
+    }
+}
+
 
     void processmap() 
     {
