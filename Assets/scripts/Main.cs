@@ -10,4 +10,5 @@ public class Main : MonoBehaviour
         gameObject.AddComponent<GameManager>();
         SceneManager.LoadScene("Menu ui", LoadSceneMode.Single);
     }
+
 }

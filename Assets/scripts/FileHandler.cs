@@ -4,10 +4,11 @@ using UnityEngine;
 using System;
 using System.IO;
 
+
 public class FileDataHandler
 {
     private string dataDirPath = ""; // the directory that the file will be saved in 
-    private string dataFileName = "";//file name 
+    private string dataFileName = "Hello";//file name 
     private bool useEncryption = false;
     private readonly string encryptionCodeWord = "George";//encryption word 
 

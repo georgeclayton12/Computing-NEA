@@ -307,6 +307,8 @@ public class CaveGeneration : MonoBehaviour
         {
             Vector3 position = new Vector3(-width / 2 + cord[0] + .5f, -height / 2 + cord[1] + .5f, 0);
             Instantiate(waterBlock, position, Quaternion.identity, waterContainer.transform);//we spawn a water block at that location 
+
+            
         }
     }
      
