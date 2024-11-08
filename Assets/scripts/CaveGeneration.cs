@@ -50,6 +50,151 @@ public class CaveGeneration : MonoBehaviour
         GameManager.Instance.SpawnPlayer(spawnPositions[index]);
 
     }
+    
+    struct coord
+    {
+    public int tilex; // X-coordinate of the tile
+    public int tiley; // Y-coordinate of the tile
+
+    // Constructor to initialize the coord with given x and y values
+        public coord(int x, int y)
+        {
+        tilex = x;
+        tiley = y;
+        }
+    }  
+
+    // Function to get all connected tiles of the same type startingfrom (startx, starty)
+    List<coord> getregiontiles(int startx, int starty)
+    {
+        List<coord> tiles = new List<coord>(); // List to store all connected tiles
+        int[,] mapflags = new int[widthg, height]; // Flags to mark checked tiles
+        int tiletype = map[startx, starty]; // The type of tile we are searching for (e.g., wall or floor)
+
+        Queue<coord> queue = new Queue<coord>(); // Queue for breadth-first search (BFS)
+        queue.Enqueue(new coord(startx, starty)); // Start search at the given coordinates
+        mapflags[startx, starty] = 1; // Mark the starting tile as checked
+
+        // Perform BFS to find all connected tiles of the same type
+        while (queue.Count > 0)
+        {
+            coord tile = queue.Dequeue(); // Get the current tile
+            tiles.Add(tile); // Add it to the list of connected tiles
+
+            // Loop through the neighbors of the current tile (left, right, up, down)
+            for (int x = tile.tilex - 1; x <= tile.tilex + 1; x++)
+            {
+                for (int y = tile.tiley - 1; y <= tile.tiley + 1; y++)
+            {
+                    // Check if the neighbor is within the map bounds and in the same row or column
+                    if (isinmaprange(x, y) && (y == tile.tiley || x == tile.tilex)) 
+                    {
+                        // If the neighbor is the same tile type and hasn't been checked yet
+                        if (mapflags[x, y] == 0 && map[x, y] == tiletype)
+                        {
+                            mapflags[x, y] = 1; // Mark it as checked
+                            queue.Enqueue(new coord(x, y)); // Add it to the queue for further exploration
+                        }
+                    }
+                }
+            }
+        }    
+
+        return tiles; // Return the list of all connected tiles
+    }
+
+// Function to check if the given coordinates are within the bounds of the map
+bool isinmaprange(int x, int y)
+{
+    return x >= 0 && x < width && y >= 0 && y < height; // Returns true if (x, y) is within the map range
+}
+
+// Room class to represent a region of connected tiles in the cave (like a room or a corridor)
+
+
+    
+
+    // Function to find and return regions of tiles of a specific type (e.g., wall, floor)
+    // tiletype: the type of tile (0 for floor, 1 for wall, etc.)
+    List<List<coord>> getregions(int tiletype) 
+    {
+        List<List<coord>> regions = new List<List<coord>>(); // Stores all regions of the specified tile type
+        int[,] mapflags = new int[width, height]; // Flags to keep track of which tiles have been checked
+
+        // Loop through every tile in the map
+        for (int x = 0; x < width; x++) 
+        {
+            for (int y = 0; y < height; y++) 
+            {
+                // If the tile hasn't been checked and is of the specified type
+                if (mapflags[x, y] == 0 && map[x, y] == tiletype) 
+                {
+                    List<coord> newregion = getregiontiles(x, y); // Get all tiles connected to this tile
+                    regions.Add(newregion); // Add the found region to the list of regions
+
+                    // Mark all tiles in this region as checked
+                    foreach (coord tile in newregion) 
+                    {
+                        mapflags[tile.tilex, tile.tiley] = 1;
+                    }
+                }
+            }
+        }    
+
+        return regions; // Return the list of regions
+    }
+    bool isinmaprange(int x, int y)
+{
+    return x >= 0 && x < width && y >= 0 && y < height; // Returns true if (x, y) is within the map range
+}
+
+
+class room
+{
+    public List<coord> tiles; // List of all tiles in the room
+    public List<coord> edgetiles; // List of tiles on the edge of the room (for pathfinding or connecting rooms)
+    public List<room> connectedrooms; // List of rooms connected to this room
+    public int roomsize; // Size of the room (number of tiles)
+
+    // Constructor that takes the room's tiles and the map
+    public room(List<coord> roomtiles, int[,] map) 
+    {
+        tiles = roomtiles; // Initialize the tiles of the room
+        roomsize = tiles.Count; // Set the size of the room
+        connectedrooms = new List<room>(); // Initialize the list of connected rooms
+
+        edgetiles = new List<coord>(); // Initialize the list of edge tiles
+        foreach (coord tile in roomtiles) 
+        {
+            // Logic to determine if a tile is an edge tile goes here
+        }
+    }
+}
+
+
+    void processmap() 
+    {
+        // Get all regions made up of wall tiles (tiletype 1)
+        List<List<coord>> wallregions = getregions(1); 
+
+        int wallthreshholdsize = 50; // Minimum size for a valid wall region
+
+        // Loop through each wall region
+        foreach(List<coord> wallregion in wallregions)  
+        {
+            // If the region is smaller than the threshold size, remove it (i.e., turn it into floor)
+            if (wallregion.Count < wallthreshholdsize)
+        {
+            foreach (coord tile in wallregion)
+            {
+                map[tile.tilex, tile.tiley] = 0; // Set tile to floor (0)
+            }
+        }
+    }
+
+    
+
+
 
     //void Update()
     //{
