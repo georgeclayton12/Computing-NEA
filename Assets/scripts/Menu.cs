@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-
+using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
     //variable set to data about menu
@@ -30,13 +30,13 @@ public class Menu : MonoBehaviour
     private void Continue()
     {
         Debug.Log("continue");
-        GameManager.Instance.NewGame();
+        SceneManager.LoadSceneAsync("Gameplay");
     }
 
     private void NewGame()
     {
-        GameManager.Instance.NewGame();
-
+        DataPersistenceManager.instance.NewGame();
+        SceneManager.LoadSceneAsync("Gameplay");
     }
     private void Settings()
     {

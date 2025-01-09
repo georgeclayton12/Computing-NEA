@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -12,7 +13,7 @@ using UnityEngine.AI;
 
 public class PlayerMovement : MonoBehaviour,IDataPersistence
 {
-    private GameObject Player;
+
 
     [Header("Health and damage")]
     public int MaxHealth = 100;
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour,IDataPersistence
 
     [Header("camera")]
     [SerializeField] private Camera view;
+
 
     [Header("movement")]
     public float speed = 8f;
@@ -41,11 +43,13 @@ public class PlayerMovement : MonoBehaviour,IDataPersistence
     public void LoadData(GameData data)
     {
         this.transform.position = data.PlayerPosition;
+        Debug.Log($"[LoadData] Setting player position to: {data.PlayerPosition}");
     } 
     public void SaveData(GameData data)
     {     
-        
         data.PlayerPosition = this.transform.position; 
+        Debug.Log($"[SaveData] Saved player position: {data.PlayerPosition}"); 
+        Debug.Log("saved position");
         
     } 
 
@@ -54,17 +58,19 @@ public class PlayerMovement : MonoBehaviour,IDataPersistence
 
     private void Start()
     {
+        Debug.Log($"Player at position: {transform.position} in scene: {gameObject.scene.name}");
         healthBar = GameObject.Find("Healthbar");
         currentHealth = MaxHealth;
         // healthBar.SetMaxHealth(MaxHealth);  
     }
     void Update()
     {
+        
         if (IsInWater())
         {   
             speed = 2f;
             jumpingPower =  1f;
-            Debug.Log("in water");
+            //Debug.Log("in water");
         
             if (Input.GetButton("Jump"))
                 rb.velocity = new UnityEngine.Vector2(rb.velocity.x, jumpingPower);

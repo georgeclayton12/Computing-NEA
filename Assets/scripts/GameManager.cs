@@ -14,22 +14,22 @@ public class GameManager : MonoBehaviour
     // This is using the singleton pattern
 
     public static GameManager Instance;
+    private DataPersistenceManager dataPersistenceManager;
 
     private void Awake()
     {
-        // If there is not game manager yet, let this class be it
         if (GameManager.Instance == null)
         {
             GameManager.Instance = this;
+            dataPersistenceManager = FindObjectOfType<DataPersistenceManager>();
+            DontDestroyOnLoad(this.gameObject); // Add this line
         }
-        // If there is already a game manager, destory this class, and warn in editor
         else if (GameManager.Instance != this)
         {
-            Destroy(this);
-            Debug.LogError("There where multiple game managers in the scene");
+            Destroy(gameObject);
+            Debug.LogError("Duplicate GameManager destroyed");
         }
     }
-
     public void NewGame()
     {
         SceneManager.UnloadSceneAsync("Menu ui");
@@ -41,10 +41,26 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPlayer(Vector3 pos)
     {
+        if (this == null) return; // Safety check
+
+        
+        
         GameObject player = Resources.Load<GameObject>("Player");
-        Instantiate(player, pos, Quaternion.identity);
+        GameObject instantiatedPlayer = Instantiate(player, pos, Quaternion.identity);
+        StartCoroutine(RefreshPersistenceAfterSpawn());
     }
 
+    private IEnumerator RefreshPersistenceAfterSpawn()
+    {
+        yield return new WaitForEndOfFrame();
+        if (dataPersistenceManager != null)
+        {
+            dataPersistenceManager.OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+        }
+    }
+}
+
+   
 
 
 
@@ -63,4 +79,3 @@ public class GameManager : MonoBehaviour
 
     // }
 
-}
