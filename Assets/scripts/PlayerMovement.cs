@@ -98,10 +98,6 @@ public class PlayerMovement : MonoBehaviour,IDataPersistence
 
         Flip();
 
-        if(Input.GetMouseButtonDown(0))
-        {
-            Mine();
-        }
 
 
 
@@ -132,23 +128,7 @@ public class PlayerMovement : MonoBehaviour,IDataPersistence
         
     }
 
-    public void Mine()
-    {
-        //Debug.Log("mining");
-        UnityEngine.Vector3 mousePosition = Input.mousePosition;
 
-        UnityEngine.Vector3 mouseWorldPosition = view.ScreenToWorldPoint(new UnityEngine.Vector3(mousePosition.x, mousePosition.y, -view.transform.position.z));
-
-        UnityEngine.Vector2 direction = (UnityEngine.Vector2)mouseWorldPosition - (UnityEngine.Vector2)transform.position;
-
-        direction.Normalize();
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, 10f, groundLayer);
-        if (hit)
-        {   
-            Destroy(hit.collider.gameObject,MineSpeed);
-        }
-    }
 
 
     // Mine function
